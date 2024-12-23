@@ -1,10 +1,10 @@
 .page {
-  --gray-rgb: 0, 0, 0;
+  --gray-rgb: 0, 0, 0; /* Light mode gray */
   --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
   --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
 
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
+  --button-primary-hover: #383838; /* Light mode button hover */
+  --button-secondary-hover: #f2f2f2; /* Light mode button hover */
 
   display: grid;
   grid-template-rows: 20px 1fr 20px;
@@ -18,12 +18,12 @@
 
 @media (prefers-color-scheme: dark) {
   .page {
-    --gray-rgb: 255, 255, 255;
+    --gray-rgb: 255, 255, 255; /* Dark mode gray */
     --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
     --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
 
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
+    --button-primary-hover: #ccc; /* Dark mode button hover */
+    --button-secondary-hover: #1a1a1a; /* Dark mode button hover */
   }
 }
 
@@ -161,7 +161,7 @@ a.secondary {
   }
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   .logo {
     filter: invert();
   }

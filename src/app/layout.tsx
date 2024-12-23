@@ -1,10 +1,12 @@
 "use client";
-
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/footer";
+import { ThemeProvider } from '@mui/material/styles';
 import "./globals.css";
+import Theme from '@/theme';
 
 // Import fonts with subsets
 const inter = Inter({
@@ -31,11 +33,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${robotoMono.variable}`}>
-        {/* Navbar component */}
-        <Navbar />
-        {/* Main content */}
-        {children}
-        <Footer/>
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={Theme} >
+            {/* Navbar component */}
+            <Navbar />
+            {/* Main content */}
+            {children}
+            <Footer />
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
