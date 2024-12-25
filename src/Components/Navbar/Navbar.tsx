@@ -16,6 +16,9 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { Button } from '@mui/material';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -47,7 +50,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -58,6 +60,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    router.push('pages/login');
+  };
+
+  const isAuthenticated = !!localStorage.getItem('authToken');
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -100,7 +112,7 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      {isAuthenticated && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
     </Menu>
   );
 
@@ -153,12 +165,18 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
-      <MenuItem sx={{ justifyContent: 'center' }}>
-        <Link href="/pages/login" style={{ width: '100%', textAlign: 'center' }}>Login</Link>
-      </MenuItem>
-      <MenuItem sx={{ justifyContent: 'center' }}>
-        <Link href="/pages/register" style={{ width: '100%', textAlign: 'center' }}>Register</Link>
-      </MenuItem>
+      {!isAuthenticated ? (
+        <>
+          <MenuItem>
+            <Link href="/pages/login">Login</Link>
+          </MenuItem>
+          <MenuItem>
+            <Link href="/pages/register">Register</Link>
+          </MenuItem>
+        </>
+      ) : (
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      )}
     </Menu>
   );
 
@@ -193,12 +211,13 @@ export default function PrimarySearchAppBar() {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ 
-            display: { xs: 'none', md: 'flex' }, 
-            alignItems: "center", 
-            gap: "20px",
-            justifyContent: "center"
-          }}>
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              alignItems: 'center',
+              gap: '20px',
+            }}
+          >
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
                 <MailIcon />
@@ -224,14 +243,20 @@ export default function PrimarySearchAppBar() {
             >
               <AccountCircle />
             </IconButton>
-            <Box sx={{ display: 'flex', gap: '20px' }}>
-              <Typography sx={{ textAlign: 'center' }}>
-                <Link href="/pages/login">Login</Link>
-              </Typography>
-              <Typography sx={{ textAlign: 'center' }}>
-                <Link href="/pages/register">Register</Link>
-              </Typography>
-            </Box>
+            {!isAuthenticated ? (
+              <>
+                <Typography>
+                  <Link href="/pages/login">Login</Link>
+                </Typography>
+                <Typography>
+                  <Link href="/pages/register">Register</Link>
+                </Typography>
+              </>
+            ) : (
+              <Button color="inherit" onClick={handleLogout}>
+                Logout
+              </Button>
+            )}
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton

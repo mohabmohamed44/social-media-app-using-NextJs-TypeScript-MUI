@@ -10,9 +10,12 @@ export interface IRegisterData {
     email: string,
     password: string,
     name: string,
+    rePassword: string,
+    gender: string,
+    dateOfBirth: string,
 }
 
-export let handleLogin = createAsyncThunk('auth/login', async function (formData: ILoginData) {
+export let handleLogin = createAsyncThunk('pages/login', async function (formData: ILoginData) {
     // payload
     return await axios.post("https://linked-posts.routemisr.com/users/signin", formData).then((response) => {
         return response.data;
@@ -23,7 +26,7 @@ export let handleLogin = createAsyncThunk('auth/login', async function (formData
 
 export let handleRegister = createAsyncThunk('auth/register', async function (formData: IRegisterData) {
     // payload
-    return await axios.post(`https://linked-post.routemisr.com/users/signup`, formData).then((response) => {
+    return await axios.post("https://linked-posts.routemisr.com/users/signup", formData).then((response) => {
         return response.data;
     }).catch((error) => {
         return error.response.data;
@@ -46,6 +49,7 @@ let authSlice = createSlice({
         clearData: function (state) {
             state.token = null;
             state.userData = null;
+            localStorage.removeItem('authToken');
         },
     },
     extraReducers:function(builder) {
@@ -53,6 +57,7 @@ let authSlice = createSlice({
             console.log(action.payload);
             state.token = action.payload.token;
             state.userData = action.payload.user;
+            localStorage.setItem('authToken', action.payload.token);
         });
 
         builder.addCase(handleLogin.rejected, function(state, action) {
@@ -69,6 +74,7 @@ let authSlice = createSlice({
             console.log(action.payload);
             state.token = action.payload.token;
             state.userData = action.payload.user;
+            localStorage.setItem('authToken', action.payload.token);
         });
 
         builder.addCase(handleRegister.rejected, function(state, action) {
