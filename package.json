@@ -17,6 +17,8 @@
     "@mui/material": "^6.2.1",
     "@mui/material-nextjs": "^6.3.0",
     "@reduxjs/toolkit": "^2.5.0",
+    "@types/axios": "^0.14.4",
+    "axios": "^1.7.9",
     "formik": "^2.4.6",
     "next": "15.1.2",
     "react": "^19.0.0",

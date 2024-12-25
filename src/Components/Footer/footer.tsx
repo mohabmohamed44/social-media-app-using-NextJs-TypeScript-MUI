@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Container, Typography, IconButton, Link } from "@mui/material";
-import { Grid as MuiGrid } from "@mui/material";
+import { Grid as MuiGrid } from "@mui/material/";
 import { styled } from "@mui/system";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaPhone, } from "react-icons/fa";
 import {MdOutlineAlternateEmail} from "react-icons/md";

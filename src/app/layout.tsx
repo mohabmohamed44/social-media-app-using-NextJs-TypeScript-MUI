@@ -5,8 +5,11 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/footer";
 import { ThemeProvider } from '@mui/material/styles';
+import { Provider } from 'react-redux';
+import {store} from '@/lib/Redux/store';
 import "./globals.css";
 import Theme from '@/theme';
+import { Toaster } from 'react-hot-toast';
 
 // Import fonts with subsets
 const inter = Inter({
@@ -35,11 +38,14 @@ export default function RootLayout({
       <body className={`${inter.variable} ${robotoMono.variable}`}>
         <AppRouterCacheProvider>
           <ThemeProvider theme={Theme} >
+            <Provider store={store}> 
+              <Toaster/>
             {/* Navbar component */}
             <Navbar />
             {/* Main content */}
             {children}
             <Footer />
+            </Provider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

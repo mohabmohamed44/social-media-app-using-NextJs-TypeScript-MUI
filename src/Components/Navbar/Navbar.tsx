@@ -153,6 +153,12 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <p>Profile</p>
       </MenuItem>
+      <MenuItem sx={{ justifyContent: 'center' }}>
+        <Link href="/pages/login" style={{ width: '100%', textAlign: 'center' }}>Login</Link>
+      </MenuItem>
+      <MenuItem sx={{ justifyContent: 'center' }}>
+        <Link href="/pages/register" style={{ width: '100%', textAlign: 'center' }}>Register</Link>
+      </MenuItem>
     </Menu>
   );
 
@@ -187,7 +193,12 @@ export default function PrimarySearchAppBar() {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: "center", gap: "10px" }}>
+          <Box sx={{ 
+            display: { xs: 'none', md: 'flex' }, 
+            alignItems: "center", 
+            gap: "20px",
+            justifyContent: "center"
+          }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
                 <MailIcon />
@@ -213,12 +224,14 @@ export default function PrimarySearchAppBar() {
             >
               <AccountCircle />
             </IconButton>
-            <Typography>
-              <Link href="/pages/login">Login</Link>
-            </Typography>
-            <Typography>
-              <Link href="/pages/register">Register</Link>
-            </Typography>
+            <Box sx={{ display: 'flex', gap: '20px' }}>
+              <Typography sx={{ textAlign: 'center' }}>
+                <Link href="/pages/login">Login</Link>
+              </Typography>
+              <Typography sx={{ textAlign: 'center' }}>
+                <Link href="/pages/register">Register</Link>
+              </Typography>
+            </Box>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton

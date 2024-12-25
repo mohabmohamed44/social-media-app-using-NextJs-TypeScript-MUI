@@ -1,9 +1,24 @@
+'use client';
 import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { Container, TextField, Button, Typography, Box } from '@mui/material';
 import Theme from '@/theme'; // Adjust the import path as necessary
+import { useFormik } from 'formik';
 
-const RegisterPage = () => {
+export default function RegisterPage() {
+
+    useFormik({
+        initialValues: {
+            name: '',
+            email: '',
+            password: '',
+            confirmPassword: ''
+        },
+        onSubmit: (values) => {
+            console.log(values);
+        }
+    });
+
     return (
         <ThemeProvider theme={Theme}>
             <Container maxWidth="xs">
@@ -57,4 +72,3 @@ const RegisterPage = () => {
     );
 };
 
-export default RegisterPage; 
