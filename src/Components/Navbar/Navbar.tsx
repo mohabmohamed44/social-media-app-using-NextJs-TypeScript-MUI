@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -62,13 +62,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    setIsAuthenticated(!!token);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    router.push('pages/login');
+    router.push('/auth/login');
   };
-
-  const isAuthenticated = !!localStorage.getItem('authToken');
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
@@ -111,7 +115,9 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link href="pages/Profile">Profile</Link>
+      </MenuItem>
       {isAuthenticated && <MenuItem onClick={handleLogout}>Logout</MenuItem>}
     </Menu>
   );
