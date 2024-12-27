@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/lib/Redux/store";
 import { getAllPosts } from "@/lib/Redux/slices/postSlice";
+import { CircularProgress } from '@mui/material';
 import Post from "@/Components/Post/Post";
 
 export default function Home() {
@@ -21,7 +22,7 @@ export default function Home() {
       <Grid item xs={6}>
         <Paper>
           {isLoading ? (
-            <p>Loading...</p>
+            <CircularProgress sx={{textAlign: "center"}} />
           ) : error ? (
             <p>Error: {error}</p>
           ) : allPost && allPost.length > 0 ? (
@@ -29,7 +30,7 @@ export default function Home() {
               <Post key={post._id} postdata={post} />
             ))
           ) : (
-            <p>No posts found</p>
+            <p style={{textAlign:"center"}}>No posts found</p>
           )}
         </Paper>
       </Grid>

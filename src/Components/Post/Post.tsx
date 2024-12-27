@@ -17,7 +17,7 @@ import { PostData } from '@/app/interfaces/postData';
 
 export default function Post({ postdata }: { postdata: PostData }) {
   return (
-    <Card sx={{ mb: 2 }}>
+    <Card sx={{ mb: 2, mt: 4}}>
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }}>
