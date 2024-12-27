@@ -11,7 +11,7 @@ import Post from "@/Components/Post/Post";
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
   const { allPost, isLoading, error } = useSelector((state: RootState) => state.posts);
-
+  // Call the function to get All Posts
   useEffect(() => {
     dispatch(getAllPosts(50));
   }, [dispatch]);
