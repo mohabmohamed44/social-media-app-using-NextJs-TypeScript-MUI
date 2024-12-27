@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "./slices/authSlice";
 import { profilereducer } from "./slices/loggedUserSlice";
-import { postsReducer } from "./slices/postSlice";
+import { postReducer } from "./slices/postSlice";
 
 export let store = configureStore({
     // slices 
     reducer: {
         auth: authReducer,
         profile: profilereducer,
-        posts: postsReducer
+        posts: postReducer,
     },
 })
 
