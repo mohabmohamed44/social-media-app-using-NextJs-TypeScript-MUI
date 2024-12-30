@@ -14,7 +14,7 @@ export default function Home() {
   // Call the function to get All Posts
   useEffect(() => {
     dispatch(getAllPosts(50));
-  }, [dispatch]);
+  }, []);
 
   return (
     <Grid container spacing={2}>
