@@ -1,5 +1,5 @@
 'use client';
-import Grid from '@mui/material/Grid';
+import Grid from '@mui/material/Grid2';
 import { Paper } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,8 +18,8 @@ export default function Home() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={3} />
-      <Grid item xs={6}>
+      <Grid size={3} />
+      <Grid size={6}>
         <Paper>
           {isLoading ? (
             <CircularProgress sx={{textAlign: "center"}} />
@@ -34,7 +34,7 @@ export default function Home() {
           )}
         </Paper>
       </Grid>
-      <Grid item xs={3} />
+      <Grid size={3} />
     </Grid>
   );
 }
