@@ -1,12 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { PostData } from "@/app/interfaces/postData";
+import Cookies from 'js-cookie';
 
+// Ensure token is dynamically retrieved
 let token: string | null = null;
 if (typeof window !== "undefined") {
-  token = localStorage.getItem("authToken");
+  token = Cookies.get('authToken') || null;
 }
 
+// Thunk for fetching all posts
 export const getAllPosts = createAsyncThunk(
   "post/allPosts", 
   async (limit: number) => {
@@ -14,16 +17,17 @@ export const getAllPosts = createAsyncThunk(
       const response = await axios.get(
         `https://linked-posts.routemisr.com/posts?limit=${limit || 50}`,
         {
-          headers: { token }
+          headers: { token: token || "" } // Add fallback for token
         }
       );
       return response.data;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      throw error.response?.data || error.message || 'Failed to fetch posts';
     }
   }
 );
 
+// Define the post slice state
 interface PostState {
   allPost: PostData[];
   isLoading: boolean;
@@ -36,6 +40,7 @@ const initialState: PostState = {
   error: null,
 };
 
+// Create the slice
 const postSlice = createSlice({
   name: "post",
   initialState,

@@ -71,7 +71,7 @@ export default function PrimarySearchAppBar() {
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    router.push('/auth/login');
+    router.push('/pages/login');
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

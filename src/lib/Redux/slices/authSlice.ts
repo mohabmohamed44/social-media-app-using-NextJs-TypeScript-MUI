@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 export interface ILoginData {
     email: string,
@@ -49,7 +50,7 @@ let authSlice = createSlice({
         clearData: function (state) {
             state.token = null;
             state.userData = null;
-            localStorage.removeItem('authToken');
+            Cookies.remove('authToken');
         },
     },
     extraReducers:function(builder) {
@@ -57,7 +58,7 @@ let authSlice = createSlice({
             console.log(action.payload);
             state.token = action.payload.token;
             state.userData = action.payload.user;
-            localStorage.setItem('authToken', action.payload.token);
+            Cookies.set('authToken', action.payload.token);
         });
 
         builder.addCase(handleLogin.rejected, function(state, action) {
@@ -74,7 +75,7 @@ let authSlice = createSlice({
             console.log(action.payload);
             state.token = action.payload.token;
             state.userData = action.payload.user;
-            localStorage.setItem('authToken', action.payload.token);
+            Cookies.set('authToken', action.payload.token);
         });
 
         builder.addCase(handleRegister.rejected, function(state, action) {
