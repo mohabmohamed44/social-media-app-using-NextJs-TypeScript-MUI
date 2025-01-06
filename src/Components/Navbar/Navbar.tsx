@@ -15,6 +15,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import Cookies from 'js-cookie';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -65,12 +66,12 @@ export default function PrimarySearchAppBar() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
+    const token = Cookies.get('authToken');
     setIsAuthenticated(!!token);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
+    Cookies.remove('authToken');
     router.push('/pages/login');
   };
 

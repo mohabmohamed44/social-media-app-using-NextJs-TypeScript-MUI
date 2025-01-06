@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import Cookies from 'js-cookie';
 export interface IUserProfile {
   _id: string;
   name: string;
@@ -26,7 +26,7 @@ const initialState: ProfileState = {
 export const getUserProfile = createAsyncThunk(
     '/profile',
     async () => {  // Remove the formData parameter since it's not needed
-      const token = localStorage.getItem('authToken');
+      const token = Cookies.get('authToken');
       if (!token) {
         throw new Error('No authentication token found');
       }
