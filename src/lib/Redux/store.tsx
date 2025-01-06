@@ -2,6 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "./slices/authSlice";
 import { profilereducer } from "./slices/loggedUserSlice";
 import { postReducer } from "./slices/postSlice";
+import { profile } from "console";
+import { ProfilePhotoReducer } from "./slices/profilePhotoSlice";
 
 export let store = configureStore({
     // slices 
@@ -9,6 +11,7 @@ export let store = configureStore({
         auth: authReducer,
         profile: profilereducer,
         posts: postReducer,
+        profilePhoto: ProfilePhotoReducer,
     },
 })
 

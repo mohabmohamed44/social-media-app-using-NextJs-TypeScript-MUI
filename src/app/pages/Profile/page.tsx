@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -7,60 +7,51 @@ import {
   Typography,
   Box,
   Container,
-  Grid,
-  Paper,
-  Divider,
-  CircularProgress
+  CircularProgress,
+  Button,
+  styled
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import EmailIcon from '@mui/icons-material/Email';
-import CakeIcon from '@mui/icons-material/Cake';
-import PersonIcon from '@mui/icons-material/Person';
+import { Calendar, Mail, User } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/lib/Redux/store';
 import { getUserProfile } from '@/lib/Redux/slices/loggedUserSlice';
+import { setProfilePhoto } from '@/lib/Redux/slices/profilePhotoSlice';
 
-const ProfileContainer = styled(Container)(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  marginBottom: theme.spacing(4),
-}));
-
-const ProfileCard = styled(Card)(({ theme }) => ({
-  padding: theme.spacing(3),
-  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-}));
-
-const UserAvatar = styled(Avatar)(({ theme }) => ({
-  width: theme.spacing(15),
-  height: theme.spacing(15),
-  marginBottom: theme.spacing(2),
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+  width: theme.spacing(16),
+  height: theme.spacing(16),
   border: `4px solid ${theme.palette.primary.main}`,
 }));
 
 const InfoItem = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  marginBottom: theme.spacing(2),
-  '& .MuiSvgIcon-root': {
-    marginRight: theme.spacing(2),
+  marginBottom: theme.spacing(3),
+  gap: theme.spacing(2),
+  '& svg': {
     color: theme.palette.primary.main,
   },
 }));
 
-const LoadingContainer = styled(Box)({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  minHeight: '400px',
-});
-
-const ProfilePage: React.FC = () => {
+const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { userProfile, loading, error } = useSelector((state: RootState) => state.profile);
+  const { isLoading: photoLoading } = useSelector((state: RootState) => state.profilePhoto);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   useEffect(() => {
     dispatch(getUserProfile());
   }, [dispatch]);
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const formData = new FormData();
+      formData.append('photo', file);
+      await dispatch(setProfilePhoto(formData));
+    }
+  };
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -72,89 +63,93 @@ const ProfilePage: React.FC = () => {
 
   if (loading) {
     return (
-      <LoadingContainer>
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
         <CircularProgress />
-      </LoadingContainer>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <ProfileContainer maxWidth="md">
-        <Typography color="error" align="center">
-          {error}
-        </Typography>
-      </ProfileContainer>
+      <Container maxWidth="md" sx={{ my: 4 }}>
+        <Typography color="error" align="center">{error}</Typography>
+      </Container>
     );
   }
 
   if (!userProfile) {
     return (
-      <ProfileContainer maxWidth="md">
-        <Typography align="center">
-          No profile data available
-        </Typography>
-      </ProfileContainer>
+      <Container maxWidth="md" sx={{ my: 4 }}>
+        <Typography align="center">No profile data available</Typography>
+      </Container>
     );
   }
 
   return (
-    <ProfileContainer maxWidth="md">
-      <ProfileCard>
+    <Container maxWidth="md" sx={{ my: 4 }}>
+      <Card>
         <CardContent>
           <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
-            <UserAvatar src={userProfile.photo} alt={userProfile.name} />
-            <Typography variant="h4" component="h1" gutterBottom>
+            <StyledAvatar src={userProfile.photo} alt={userProfile.name}>
+              {userProfile.name[0]}
+            </StyledAvatar>
+            <Typography variant="h4" component="h1" sx={{ mt: 2 }}>
               {userProfile.name}
             </Typography>
           </Box>
 
-          <Divider sx={{ my: 3 }} />
+          <Box sx={{ mb: 4 }}>
+            <InfoItem>
+              <User />
+              <Box>
+                <Typography variant="body2" color="text.secondary">Gender</Typography>
+                <Typography>{userProfile.gender.charAt(0).toUpperCase() + userProfile.gender.slice(1)}</Typography>
+              </Box>
+            </InfoItem>
 
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Paper elevation={0} sx={{ p: 3, backgroundColor: 'background.default' }}>
-                <InfoItem>
-                  <PersonIcon />
-                  <Box>
-                    <Typography variant="subtitle2" color="textSecondary">
-                      Gender
-                    </Typography>
-                    <Typography variant="body1">
-                      {userProfile.gender.charAt(0).toUpperCase() + userProfile.gender.slice(1)}
-                    </Typography>
-                  </Box>
-                </InfoItem>
+            <InfoItem>
+              <Mail />
+              <Box>
+                <Typography variant="body2" color="text.secondary">Email</Typography>
+                <Typography>{userProfile.email}</Typography>
+              </Box>
+            </InfoItem>
 
-                <InfoItem>
-                  <EmailIcon />
-                  <Box>
-                    <Typography variant="subtitle2" color="textSecondary">
-                      Email
-                    </Typography>
-                    <Typography variant="body1">
-                      {userProfile.email}
-                    </Typography>
-                  </Box>
-                </InfoItem>
+            <InfoItem>
+              <Calendar />
+              <Box>
+                <Typography variant="body2" color="text.secondary">Date of Birth</Typography>
+                <Typography>{formatDate(userProfile.dateOfBirth)}</Typography>
+              </Box>
+            </InfoItem>
+          </Box>
 
-                <InfoItem>
-                  <CakeIcon />
-                  <Box>
-                    <Typography variant="subtitle2" color="textSecondary">
-                      Date of Birth
-                    </Typography>
-                    <Typography variant="body1">
-                      {formatDate(userProfile.dateOfBirth)}
-                    </Typography>
-                  </Box>
-                </InfoItem>
-              </Paper>
-            </Grid>
-          </Grid>
+          <Box textAlign="center">
+            <input
+              accept="image/*"
+              style={{ display: 'none' }}
+              id="upload-photo"
+              type="file"
+              onChange={handleFileChange}
+            />
+            <label htmlFor="upload-photo">
+              <Button
+                variant="contained"
+                component="span"
+                disabled={photoLoading}
+              >
+                {photoLoading ? <CircularProgress size={24} /> : 'Upload Photo'}
+              </Button>
+            </label>
+            {selectedFile && (
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                Selected file: {selectedFile.name}
+              </Typography>
+            )}
+          </Box>
         </CardContent>
-      </ProfileCard>
-    </ProfileContainer>
+      </Card>
+    </Container>
   );
 };
 
