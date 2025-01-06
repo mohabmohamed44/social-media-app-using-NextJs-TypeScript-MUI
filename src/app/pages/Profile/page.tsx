@@ -15,12 +15,13 @@ import { Calendar, Mail, User } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/lib/Redux/store';
 import { getUserProfile } from '@/lib/Redux/slices/loggedUserSlice';
-import { setProfilePhoto } from '@/lib/Redux/slices/profilePhotoSlice';
+import { setProfilePhoto, clearProfilePhoto } from '@/lib/Redux/slices/profilePhotoSlice';
 
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   width: theme.spacing(16),
   height: theme.spacing(16),
   border: `4px solid ${theme.palette.primary.main}`,
+  position: 'relative',
 }));
 
 const InfoItem = styled(Box)(({ theme }) => ({
@@ -36,22 +37,9 @@ const InfoItem = styled(Box)(({ theme }) => ({
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { userProfile, loading, error } = useSelector((state: RootState) => state.profile);
-  const { isLoading: photoLoading } = useSelector((state: RootState) => state.profilePhoto);
+  const { isLoading: photoLoading, error: photoError } = useSelector((state: RootState) => state.profilePhoto);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  useEffect(() => {
-    dispatch(getUserProfile());
-  }, [dispatch]);
-
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      const formData = new FormData();
-      formData.append('photo', file);
-      await dispatch(setProfilePhoto(formData));
-    }
-  };
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -59,6 +47,32 @@ const ProfilePage = () => {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  useEffect(() => {
+    dispatch(getUserProfile());
+    return () => {
+      dispatch(clearProfilePhoto());
+    };
+  }, [dispatch]);
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      const fileUrl = URL.createObjectURL(file);
+      setPreviewUrl(fileUrl);
+
+      const formData = new FormData();
+      formData.append('photo', file);
+      
+      try {
+        await dispatch(setProfilePhoto(formData)).unwrap();
+        dispatch(getUserProfile());
+      } catch (error) {
+        setPreviewUrl(null);
+      }
+    }
   };
 
   if (loading) {
@@ -90,12 +104,33 @@ const ProfilePage = () => {
       <Card>
         <CardContent>
           <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
-            <StyledAvatar src={userProfile.photo} alt={userProfile.name}>
-              {userProfile.name[0]}
-            </StyledAvatar>
+            <Box position="relative">
+              <StyledAvatar 
+                src={previewUrl || userProfile.photo} 
+                alt={userProfile.name}
+              >
+                {userProfile.name[0]}
+              </StyledAvatar>
+              {photoLoading && (
+                <CircularProgress
+                  size={24}
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+              )}
+            </Box>
             <Typography variant="h4" component="h1" sx={{ mt: 2 }}>
               {userProfile.name}
             </Typography>
+            {photoError && (
+              <Typography color="error" variant="body2" sx={{ mt: 1 }}>
+                {photoError}
+              </Typography>
+            )}
           </Box>
 
           <Box sx={{ mb: 4 }}>
@@ -138,7 +173,7 @@ const ProfilePage = () => {
                 component="span"
                 disabled={photoLoading}
               >
-                {photoLoading ? <CircularProgress size={24} /> : 'Upload Photo'}
+                {photoLoading ? 'Uploading...' : 'Change Photo'}
               </Button>
             </label>
             {selectedFile && (

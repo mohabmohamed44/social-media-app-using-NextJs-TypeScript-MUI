@@ -8,7 +8,7 @@ export const setProfilePhoto = createAsyncThunk(
   async (formData: FormData, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        "https://linked-posts.routemisr.com/profile/upload",
+        "https://linked-posts.routemisr.com/users/upload-photo",
         formData,
         {
           headers: {
