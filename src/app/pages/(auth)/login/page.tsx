@@ -19,12 +19,12 @@ interface LoginErrorPayload {
 
 export default function LoginPage() {
 
-    let router = useRouter()
-    let dispatch = useDispatch<dispatchType>();
+    const router = useRouter()
+    const dispatch = useDispatch<dispatchType>();
     const [loginError, setLoginError] = useState<string | null>(null); // State for error message
     const [loading, setLoading] = useState<boolean>(false); // State for loading
 
-    let loginFormik = useFormik({
+    const loginFormik = useFormik({
         initialValues: {
             email: '',
             password: '',
