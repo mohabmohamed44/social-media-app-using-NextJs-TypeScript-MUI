@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -12,7 +13,6 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Cookies from 'js-cookie';
@@ -168,7 +168,7 @@ export default function PrimarySearchAppBar() {
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircle />
+          <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
         </IconButton>
         <p>Profile</p>
       </MenuItem>
@@ -206,9 +206,7 @@ export default function PrimarySearchAppBar() {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            <Link href="/">
-              Social
-            </Link>
+            <Link href="/">Social</Link>
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -250,7 +248,7 @@ export default function PrimarySearchAppBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              <Avatar alt="User Avatar" src="/static/images/avatar/2.jpg" />
             </IconButton>
             {!isAuthenticated ? (
               <>
