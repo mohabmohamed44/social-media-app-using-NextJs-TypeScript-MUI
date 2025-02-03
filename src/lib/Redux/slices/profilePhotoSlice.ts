@@ -30,7 +30,7 @@ export const setProfilePhoto = createAsyncThunk(
 const profilePhotoSlice = createSlice({
   name: "profilePhoto",
   initialState: {
-    profilePhoto: null as any,
+    profilePhoto: null as any | null,
     isLoading: false,
     error: null as string | null,
   },
